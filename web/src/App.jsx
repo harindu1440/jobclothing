@@ -41,13 +41,11 @@ export default function App() {
         case 'placementStarted':
         case 'editorStarted':
           setPlacement(true)
-          setVisible(false)
           break
         case 'placementFinished':
         case 'placementCancelled':
         case 'editorFinished':
           setPlacement(false)
-          setVisible(true)
           break
         default:
           break
@@ -85,36 +83,38 @@ export default function App() {
 
   return (
     <div className="nui-root" style={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', inset: 0, background: 'transparent', pointerEvents: 'none' }}>
-      <AnimatePresence mode="wait">
-        {mode === 'admin' ? (
-          <motion.div
-            key="admin"
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}
-          >
-            <AdminPanel onClose={handleClose} addToast={addToast} />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="player"
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}
-          >
-            <UniformSelector
-              uniforms={uniforms}
-              jobData={jobData}
-              onClose={handleClose}
-              addToast={addToast}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div style={{ visibility: placementMode ? 'hidden' : 'visible', transition: 'visibility 0s', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <AnimatePresence mode="wait">
+          {mode === 'admin' ? (
+            <motion.div
+              key="admin"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}
+            >
+              <AdminPanel onClose={handleClose} addToast={addToast} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="player"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}
+            >
+              <UniformSelector
+                uniforms={uniforms}
+                jobData={jobData}
+                onClose={handleClose}
+                addToast={addToast}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div style={{ pointerEvents: 'auto' }}>
         <Toast toasts={toasts} />
