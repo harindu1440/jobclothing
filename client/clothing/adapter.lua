@@ -121,6 +121,12 @@ function ClothingAdapter.applyClothing(clothingData)
     end
 end
 
+function ClothingAdapter.saveClothing()
+    if _activeAdapter and _activeAdapter.saveClothing then
+        _activeAdapter.saveClothing()
+    end
+end
+
 function ClothingAdapter.getSupportedComponents()
     if not _activeAdapter then return { components = {}, props = {} } end
     return _activeAdapter.getSupportedComponents()

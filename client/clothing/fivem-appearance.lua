@@ -163,6 +163,11 @@ function FivemAppearanceAdapter.applyClothing(clothingData)
     -- to avoid overwriting the player's permanent base appearance in the database.
 end
 
+function FivemAppearanceAdapter.saveClothing()
+    local appearance = exports['fivem-appearance']:getPedAppearance(PlayerPedId())
+    TriggerServerEvent('fivem-appearance:save', appearance)
+end
+
 function FivemAppearanceAdapter.getSupportedComponents()
     local components = {}
     for _, idx in ipairs(JOBCLOTHING.ClothingComponents) do

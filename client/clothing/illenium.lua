@@ -147,6 +147,11 @@ function IlleniumAdapter.applyClothing(clothingData)
     -- to avoid overwriting the player's permanent base appearance in the database.
 end
 
+function IlleniumAdapter.saveClothing()
+    local appearance = exports['illenium-appearance']:getPedAppearance(PlayerPedId())
+    TriggerServerEvent('illenium-appearance:server:saveAppearance', appearance)
+end
+
 --- Returns the list of component keys this adapter supports
 function IlleniumAdapter.getSupportedComponents()
     local components = {}

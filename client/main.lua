@@ -315,6 +315,11 @@ RegisterNetEvent('jobclothing:applyOutfit', function(outfitData)
     CloseNUI()
     _activeJobOutfit = outfitData
     ClothingAdapter.applyClothing(outfitData)
+    
+    if Config.SaveOutfitAfterApply then
+        Wait(500) -- Wait briefly to ensure clothing is fully applied before saving
+        ClothingAdapter.saveClothing()
+    end
 end)
 
 local function ReapplyJobOutfit()

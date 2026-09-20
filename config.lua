@@ -19,6 +19,9 @@ Config.Clothing = "auto"
 -- Storage backend: "auto" | "oxmysql" | "json"
 Config.Storage = "auto"
 
+-- Should the job outfit permanently save to the database? (Fixes logout issues)
+Config.SaveOutfitAfterApply = true
+
 -- Admin groups allowed to use /jobclothing
 Config.AdminGroups = {
     ["god"]   = true,
