@@ -124,14 +124,14 @@ RegisterNUICallback('startPedPlacement', function(data, cb)
 
             -- Re-open NUI
             SetNuiFocus(true, true)
-            SetNuiFocusKeepInput(true)
+            SetNuiFocusKeepInput(false)
             SendNUIMessage({ type = "placementFinished", payload = result })
             cb({ success = true, ped = result })
         end,
         function()
             -- Cancelled
             SetNuiFocus(true, true)
-            SetNuiFocusKeepInput(true)
+            SetNuiFocusKeepInput(false)
             SendNUIMessage({ type = "placementCancelled" })
             cb({ success = false, cancelled = true })
         end
@@ -174,13 +174,13 @@ RegisterNUICallback('repositionPed', function(data, cb)
             })
             local result = WaitForCB('pedUpdated')
             SetNuiFocus(true, true)
-            SetNuiFocusKeepInput(true)
+            SetNuiFocusKeepInput(false)
             SendNUIMessage({ type = "placementFinished" })
             cb({ success = true })
         end,
         function()
             SetNuiFocus(true, true)
-            SetNuiFocusKeepInput(true)
+            SetNuiFocusKeepInput(false)
             SendNUIMessage({ type = "placementCancelled" })
             cb({ success = false, cancelled = true })
         end
@@ -204,7 +204,7 @@ RegisterNUICallback('openClothingEditor', function(data, cb)
     ClothingAdapter.openClothingEditor(function(outfitData)
         -- Re-open NUI
         SetNuiFocus(true, true)
-        SetNuiFocusKeepInput(true)
+        SetNuiFocusKeepInput(false)
 
         if not outfitData then
             cb({ success = false, error = "Clothing editor was cancelled." })
