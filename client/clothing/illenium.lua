@@ -97,22 +97,28 @@ function IlleniumAdapter.extractClothingOnly(appearanceData)
     return result
 end
 
---- Apply clothing data to the local player WITHOUT changing appearance
----@param clothingData table {components={}, props={}}
 function IlleniumAdapter.applyClothing(clothingData)
     if not clothingData then return end
     local ped = PlayerPedId()
 
-    -- Apply components
+    local formattedComponents = {}
     local components = clothingData.components or {}
     for key, data in pairs(components) do
         local idx = JOBCLOTHING.ComponentIndex[key]
         if idx then
-            SetPedComponentVariation(ped, idx, data.drawable or 0, data.texture or 0, data.palette or 0)
+            formattedComponents[#formattedComponents + 1] = {
+                component_id = idx,
+                drawable = data.drawable or 0,
+                texture = data.texture or 0,
+            }
         end
     end
 
-    -- Apply props
+    if #formattedComponents > 0 then
+        exports['illenium-appearance']:setPedComponents(ped, formattedComponents)
+    end
+
+    local formattedProps = {}
     local props = clothingData.props or {}
     for key, data in pairs(props) do
         local idx = JOBCLOTHING.PropIndex[key]
@@ -120,9 +126,17 @@ function IlleniumAdapter.applyClothing(clothingData)
             if data.drawable == nil or data.drawable == -1 then
                 ClearPedProp(ped, idx)
             else
-                SetPedPropIndex(ped, idx, data.drawable, data.texture or 0, true)
+                formattedProps[#formattedProps + 1] = {
+                    prop_id = idx,
+                    drawable = data.drawable,
+                    texture = data.texture or 0,
+                }
             end
         end
+    end
+
+    if #formattedProps > 0 then
+        exports['illenium-appearance']:setPedProps(ped, formattedProps)
     end
 end
 
