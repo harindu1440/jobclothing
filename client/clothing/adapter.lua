@@ -91,7 +91,13 @@ end
 
 function ClothingAdapter.applyClothing(clothingData)
     if not clothingData then return end
-    -- Always use native application to ensure clothing-only change
+
+    if _activeAdapter and _activeAdapter.applyClothing then
+        _activeAdapter.applyClothing(clothingData)
+        return
+    end
+
+    -- Fallback: Always use native application to ensure clothing-only change
     local ped = PlayerPedId()
 
     local components = clothingData.components or {}
