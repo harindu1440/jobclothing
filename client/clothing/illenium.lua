@@ -62,35 +62,39 @@ function IlleniumAdapter.openClothingEditor(callback)
     })
 end
 
---- Extract only clothing/prop components from a full illenium appearance object
----@param appearanceData table
----@return table {components={}, props={}}
 function IlleniumAdapter.extractClothingOnly(appearanceData)
     local result = { components = {}, props = {} }
     if not appearanceData then return result end
 
-    -- illenium uses "components" and "props" tables inside its appearance data
     local components = appearanceData.components or {}
     local props      = appearanceData.props or {}
 
-    for _, idx in ipairs(JOBCLOTHING.ClothingComponents) do
-        local key = JOBCLOTHING.ComponentMap[idx]
-        if key and components[key] then
-            result.components[key] = {
-                drawable = components[key].drawable,
-                texture  = components[key].texture,
-                palette  = components[key].palette or 0,
-            }
+    -- Handle components array
+    for i = 1, #components do
+        local comp = components[i]
+        if comp and comp.component_id then
+            local key = JOBCLOTHING.ComponentMap[comp.component_id]
+            if key then
+                result.components[key] = {
+                    drawable = comp.drawable or 0,
+                    texture  = comp.texture or 0,
+                    palette  = comp.palette or 0,
+                }
+            end
         end
     end
 
-    for _, idx in ipairs(JOBCLOTHING.PropIndices) do
-        local key = JOBCLOTHING.PropMap[idx]
-        if key and props[key] then
-            result.props[key] = {
-                drawable = props[key].drawable,
-                texture  = props[key].texture,
-            }
+    -- Handle props array
+    for i = 1, #props do
+        local prop = props[i]
+        if prop and prop.prop_id then
+            local key = JOBCLOTHING.PropMap[prop.prop_id]
+            if key then
+                result.props[key] = {
+                    drawable = prop.drawable or 0,
+                    texture  = prop.texture or 0,
+                }
+            end
         end
     end
 

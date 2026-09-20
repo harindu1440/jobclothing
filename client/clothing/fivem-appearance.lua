@@ -57,30 +57,59 @@ function FivemAppearanceAdapter.extractClothingOnly(appearanceData)
     local result = { components = {}, props = {} }
     if not appearanceData then return result end
 
-    -- fivem-appearance stores clothes per component key
-    for _, idx in ipairs(JOBCLOTHING.ClothingComponents) do
-        local key = JOBCLOTHING.ComponentMap[idx]
-        if key then
-            local comp = appearanceData[key] or appearanceData.components and appearanceData.components[key]
-            if comp then
+    local components = appearanceData.components or appearanceData
+    local props      = appearanceData.props or appearanceData
+
+    if type(components) == "table" and components[1] and components[1].component_id then
+        for i = 1, #components do
+            local comp = components[i]
+            local key = JOBCLOTHING.ComponentMap[comp.component_id]
+            if key then
                 result.components[key] = {
                     drawable = comp.drawable or comp.value or 0,
-                    texture  = comp.texture  or 0,
-                    palette  = comp.palette  or 0,
+                    texture  = comp.texture or 0,
+                    palette  = comp.palette or 0,
                 }
+            end
+        end
+    else
+        for _, idx in ipairs(JOBCLOTHING.ClothingComponents) do
+            local key = JOBCLOTHING.ComponentMap[idx]
+            if key then
+                local comp = appearanceData[key] or (appearanceData.components and appearanceData.components[key])
+                if comp then
+                    result.components[key] = {
+                        drawable = comp.drawable or comp.value or 0,
+                        texture  = comp.texture  or 0,
+                        palette  = comp.palette  or 0,
+                    }
+                end
             end
         end
     end
 
-    for _, idx in ipairs(JOBCLOTHING.PropIndices) do
-        local key = JOBCLOTHING.PropMap[idx]
-        if key then
-            local prop = appearanceData[key] or appearanceData.props and appearanceData.props[key]
-            if prop then
+    if type(props) == "table" and props[1] and props[1].prop_id then
+        for i = 1, #props do
+            local prop = props[i]
+            local key = JOBCLOTHING.PropMap[prop.prop_id]
+            if key then
                 result.props[key] = {
                     drawable = prop.drawable or prop.value or 0,
-                    texture  = prop.texture  or 0,
+                    texture  = prop.texture or 0,
                 }
+            end
+        end
+    else
+        for _, idx in ipairs(JOBCLOTHING.PropIndices) do
+            local key = JOBCLOTHING.PropMap[idx]
+            if key then
+                local prop = appearanceData[key] or (appearanceData.props and appearanceData.props[key])
+                if prop then
+                    result.props[key] = {
+                        drawable = prop.drawable or prop.value or 0,
+                        texture  = prop.texture  or 0,
+                    }
+                end
             end
         end
     end
