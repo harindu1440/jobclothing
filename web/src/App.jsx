@@ -39,11 +39,13 @@ export default function App() {
           setVisible(false)
           break
         case 'placementStarted':
+        case 'editorStarted':
           setPlacement(true)
           setVisible(false)
           break
         case 'placementFinished':
         case 'placementCancelled':
+        case 'editorFinished':
           setPlacement(false)
           setVisible(true)
           break

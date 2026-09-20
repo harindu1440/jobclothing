@@ -200,11 +200,13 @@ RegisterNUICallback('openClothingEditor', function(data, cb)
     -- Close NUI focus so clothing menu can open
     SetNuiFocus(false, false)
     SetNuiFocusKeepInput(false)
+    SendNUIMessage({ type = "editorStarted" })
 
     ClothingAdapter.openClothingEditor(function(outfitData)
         -- Re-open NUI
         SetNuiFocus(true, true)
         SetNuiFocusKeepInput(false)
+        SendNUIMessage({ type = "editorFinished" })
 
         if not outfitData then
             cb({ success = false, error = "Clothing editor was cancelled." })
@@ -306,11 +308,26 @@ RegisterNetEvent('jobclothing:receiveUniforms', function(uniforms, jobData)
     OpenNUI({ admin = false, uniforms = uniforms, jobData = jobData })
 end)
 
+local _activeJobOutfit = nil
+
 -- Apply uniform (outfit data sent from server after validation)
 RegisterNetEvent('jobclothing:applyOutfit', function(outfitData)
     CloseNUI()
+    _activeJobOutfit = outfitData
     ClothingAdapter.applyClothing(outfitData)
 end)
+
+local function ReapplyJobOutfit()
+    if _activeJobOutfit then
+        SetTimeout(1000, function()
+            ClothingAdapter.applyClothing(_activeJobOutfit)
+        end)
+    end
+end
+
+RegisterNetEvent('illenium-appearance:client:reloadSkin', ReapplyJobOutfit)
+RegisterNetEvent('qb-clothing:client:loadPlayerClothing', ReapplyJobOutfit)
+RegisterNetEvent('fivem-appearance:client:reloadSkin', ReapplyJobOutfit)
 
 RegisterNetEvent('jobclothing:notifyError', function(msg)
     SetNotificationTextEntry("STRING")

@@ -143,13 +143,8 @@ function IlleniumAdapter.applyClothing(clothingData)
         exports['illenium-appearance']:setPedProps(ped, formattedProps)
     end
 
-    -- Save appearance to DB so it persists through reloadskin
-    SetTimeout(500, function()
-        local currentAppearance = exports['illenium-appearance']:getPedAppearance(ped)
-        if currentAppearance then
-            TriggerServerEvent("illenium-appearance:server:saveAppearance", currentAppearance)
-        end
-    end)
+    -- Job clothing is now tracked locally and re-applied on reloadskin
+    -- to avoid overwriting the player's permanent base appearance in the database.
 end
 
 --- Returns the list of component keys this adapter supports
