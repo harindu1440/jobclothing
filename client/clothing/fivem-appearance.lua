@@ -158,6 +158,14 @@ function FivemAppearanceAdapter.applyClothing(clothingData)
     if #formattedProps > 0 then
         exports['fivem-appearance']:setPedProps(ped, formattedProps)
     end
+
+    -- Save appearance to DB so it persists through reloadskin
+    SetTimeout(500, function()
+        local currentAppearance = exports['fivem-appearance']:getPedAppearance(ped)
+        if currentAppearance then
+            TriggerServerEvent("fivem-appearance:server:saveAppearance", currentAppearance)
+        end
+    end)
 end
 
 function FivemAppearanceAdapter.getSupportedComponents()

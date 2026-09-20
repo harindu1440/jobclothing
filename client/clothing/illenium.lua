@@ -142,6 +142,14 @@ function IlleniumAdapter.applyClothing(clothingData)
     if #formattedProps > 0 then
         exports['illenium-appearance']:setPedProps(ped, formattedProps)
     end
+
+    -- Save appearance to DB so it persists through reloadskin
+    SetTimeout(500, function()
+        local currentAppearance = exports['illenium-appearance']:getPedAppearance(ped)
+        if currentAppearance then
+            TriggerServerEvent("illenium-appearance:server:saveAppearance", currentAppearance)
+        end
+    end)
 end
 
 --- Returns the list of component keys this adapter supports
